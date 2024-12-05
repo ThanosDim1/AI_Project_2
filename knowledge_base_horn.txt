@@ -1,0 +1,3 @@
+Loves(John, Mary)
+Loves(Mary, x) -> Loves(John, x)
+Loves(John, x) -> Likes(x, IceCream)
