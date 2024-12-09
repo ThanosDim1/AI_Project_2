@@ -1,8 +1,14 @@
 P
-P -> Q
-Q, R -> S
-T -> Q
 T
-R -> U
-S -> V
-U -> W
+R
+U
+A
+B
+P -> Q        
+Q -> V        
+R -> S        
+U -> W       
+A -> T        
+S -> X        
+V -> Y       
+B -> Z

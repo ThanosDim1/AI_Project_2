@@ -4,7 +4,7 @@ def read_kb(file_path):
         for line in file:
             if '->' in line:
                 premises, conclusion = line.split('->')
-                premises = [p.strip() for p in premises.split(',')]
+                premises = premises.strip()
                 conclusion = conclusion.strip()
                 if conclusion in kb:
                     kb[conclusion].append(premises)
@@ -12,9 +12,7 @@ def read_kb(file_path):
                     kb[conclusion] = [premises]
             else:
                 symbol = line.strip()
-                if symbol in kb:
-                    kb[symbol].append([])
-                else:
+                if symbol not in kb:
                     kb[symbol] = [[]]
     return kb
 
