@@ -7,7 +7,6 @@ def read_knowledge_base(file_path):
         line = line.strip()
         if '->' in line:
             premise, conclusion = line.split('->')
-            premise = premise.strip().split(', ')
             conclusion = conclusion.strip()
             rules.append((premise, conclusion))
         else:
