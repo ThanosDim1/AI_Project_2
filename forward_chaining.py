@@ -29,7 +29,7 @@ def forward_chaining_with_proof(facts,negative_facts, rules, query):
         return False, None
 
 
-    
+
 # Build proof for the query
 def build_proof_tree(fact, tree):
     if fact not in tree or not tree[fact]:

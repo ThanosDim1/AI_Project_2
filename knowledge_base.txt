@@ -11,4 +11,6 @@ U -> W
 A, B -> C
 C, D -> E
 E -> J
+P, R -> T
+T, C -> L
 
