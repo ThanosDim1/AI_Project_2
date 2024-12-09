@@ -1,14 +1,13 @@
 P
-T
 R
 U
 A
 B
-P -> Q        
-Q -> V        
-R -> S        
-U -> W       
-A -> T        
-S -> X        
-V -> Y       
-B -> Z
+D
+P -> Q
+Q -> V
+R -> S
+U -> W
+A, B -> C
+C, D -> E
+

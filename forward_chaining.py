@@ -1,47 +1,54 @@
-def read_kb(file_path):
-    kb = {}
-    with open(file_path, 'r') as file:
-        for line in file:
-            if '->' in line:
-                premises, conclusion = line.split('->')
-                premises = premises.strip()
-                conclusion = conclusion.strip()
-                if conclusion in kb:
-                    kb[conclusion].append(premises)
-                else:
-                    kb[conclusion] = [premises]
-            else:
-                symbol = line.strip()
-                if symbol not in kb:
-                    kb[symbol] = [[]]
-    return kb
+def forward_chaining_with_proof(facts, rules, query):
+    # Initialize known facts and proof tree
+    known_facts = set(facts)
+    proof_tree = {fact: [] for fact in facts}
+    changed = True
 
-def forward_chaining(kb, query):
-    if query not in kb:
-        return f"The type '{query}' is not found in the knowledge base."
+    while changed:
+        changed = False
+        for rule in rules:
+            premises = rule[:-1]
+            conclusion = rule[-1]
+            if conclusion not in known_facts and all(premise in known_facts for premise in premises):
+                known_facts.add(conclusion)
+                proof_tree[conclusion] = premises
+                changed = True
 
-    inferred = {sym: False for sym in kb}
-    agenda = [sym for sym in kb if not any(kb[sym])]
-    
-    while agenda:
-        p = agenda.pop(0)
-        if not inferred[p]:
-            inferred[p] = True
-            for conclusion, clauses in kb.items():
-                for clause in clauses:
-                    if p in clause and all(inferred.get(sym, False) for sym in clause):
-                        if not inferred[conclusion]:
-                            agenda.append(conclusion)
-    
-    return f"The type '{query}' is {'true' if inferred.get(query, False) else 'false'} according to the knowledge base."
+    # Build proof for the query
+    def build_proof_tree(fact, tree):
+        if fact not in tree or not tree[fact]:
+            return fact  # Base case: fact is an initial fact
+        return {fact: [build_proof_tree(premise, tree) for premise in tree[fact]]}
 
-# Reading the knowledge base from the file
-file_path = 'knowledge_base.txt'
-kb = read_kb(file_path)
+    if query in known_facts:
+        proof = build_proof_tree(query, proof_tree)
+        return True, proof
+    else:
+        return False, None
 
-# Input the query type
-query = input("Enter the type to be proven: ").strip()
 
-# Perform forward chaining
-result = forward_chaining(kb, query)
-print(result)
+# Read data from file
+file_path = "knowledge_base.txt"
+with open(file_path, "r") as file:
+    lines = file.read().splitlines()
+
+# Parse the facts and rules
+facts = set()
+rules = []
+
+for line in lines:
+    if "->" in line:
+        premises, conclusion = line.split("->")
+        rules.append([premise.strip() for premise in premises.split(",")] + [conclusion.strip()])
+    else:
+        facts.add(line.strip())
+
+# Test the forward chaining algorithm
+query = input("Enter query: ").strip()
+result, proof = forward_chaining_with_proof(facts, rules, query)
+
+if result:
+    print("True")
+    print("Proof tree:", proof)
+else:
+    print("False")
