@@ -1,34 +1,30 @@
-def forward_chaining_with_proof(facts,negative_facts, rules, query):
+def forward_chaining_with_proof(facts, rules, query):
     # Initialize known facts, negative facts, and proof tree
-    known_facts = set(facts)
-    negative_facts = set(negative_facts)
-    proof_tree = {fact: [] for fact in facts}
-    changed = True
+    known_facts = set(facts) # Known facts
 
+    proof_tree = {fact: [] for fact in facts} # Proof tree
+    changed = True # Flag to indicate if any new fact is inferred in the current iteration
+
+    # Forward chaining process
     while changed:
         changed = False
+        # Iterate over each rule
         for rule in rules:
-            premises = rule[:-1]
-            conclusion = rule[-1]
-            
+            premises = rule[:-1]# Premises of the rule
+            conclusion = rule[-1]# Conclusion of the rule
+
             # Check if any premise is a negative fact (i.e., a fact is negated)
-            if conclusion not in known_facts and all(
-                (premise in known_facts or premise not in negative_facts) for premise in premises):
-                known_facts.add(conclusion)
-                proof_tree[conclusion] = premises
-                changed = True
+            if conclusion not in known_facts:
+                known_facts.add(conclusion) # Add the conclusion to known facts
+                proof_tree[conclusion] = premises # Add the premises to the proof tree
+                changed = True # Set the flag to True to continue the process
 
     # After forward chaining, check if the query is a fact or its negation
     if query in known_facts:
         proof = build_proof_tree(query, proof_tree)
         return True, proof
-    elif f"!{query}" in negative_facts:
-        proof = build_proof_tree(f"!{query}", proof_tree)
-        return False, proof
     else:
         return False, None
-
-
 
 # Build proof for the query
 def build_proof_tree(fact, tree):
@@ -46,38 +42,38 @@ def pretty_print_proof(proof, indent=0):
     else:
         print("  " * indent + f"{proof}")
 
-# Read data from file
-file_path = "knowledge_base.txt"
-with open(file_path, "r") as file:
-    lines = file.read().splitlines()
-
-# Parse the facts and rules
-facts = set()
-rules = []
-
-facts = set()
-negative_facts = set()
-for line in lines:
-    line = line.strip()
-    if "->" in line:
-        premises, conclusion = line.split("->")
-        rules.append([premise.strip() for premise in premises.split(",")] + [conclusion.strip()])
-    else:
-        # Handle negative facts
-        if line.startswith("!"):
-            negative_facts.add(line[1:].strip())  # Add the fact without '!' to negative_facts
+def KBread(file_path):
+    with open(file_path, "r") as file:
+        lines = file.read().splitlines()
+    rules = []
+    facts = set()
+    for line in lines:
+        line = line.strip()
+        if "->" in line:
+            premises, conclusion = line.split("->")
+            rules.append([premise.strip() for premise in premises.split(",")] + [conclusion.strip()])
         else:
             facts.add(line)  # Add the positive fact to facts
+    return facts, rules
 
-# User input for the query
-query = input("Enter the query you want to check (e.g., F): ").strip()
+def main():
+    file_path = input("Enter the path to the input file: ").strip()
 
-# Test the forward chaining algorithm
-result, proof = forward_chaining_with_proof(facts, negative_facts, rules, query)
+    # Load the knowledge base
+    facts, rules = KBread(file_path)
 
-if result:
-    print(f"\nThe query '{query}' is derivable (True).")
-    print("\nProof tree:")
-    pretty_print_proof(proof)
-else:
-    print(f"\nThe query '{query}' is not derivable (False).")
+    # User input for the query
+    query = input("Enter the query you want to check (e.g., F): ").strip()
+
+    # Test the forward chaining algorithm
+    result, proof = forward_chaining_with_proof(facts, rules, query)
+
+    if result:
+        print(f"\nThe query '{query}' is derivable (True).")
+        print("\nProof tree:")
+        pretty_print_proof(proof)
+    else:
+        print(f"\nThe query '{query}' is not derivable (False).")
+
+if __name__ == "__main__":
+    main()
