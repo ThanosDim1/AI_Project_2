@@ -3,7 +3,7 @@ R
 U
 A
 B
-!D
+D
 P -> Q
 Q -> V
 R -> S
