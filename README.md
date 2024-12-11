@@ -52,9 +52,19 @@ This project implements a **Forward Chaining Inference System**. It uses a knowl
 ```plaintext
 P
 R
+U
+A
+B
+D
 P -> Q
 Q -> V
 R -> S
+U -> W
+A, B -> C
+C, D -> E
+E -> J
+P, R -> T
+T, C -> L
 ```
 
 ### Execution
