@@ -55,7 +55,10 @@ R
 P -> Q
 Q -> V
 R -> S
+```
 
+### Execution
+```plaintext
 Query ( Input From User): V
 The query 'V' is derivable (True).
 
