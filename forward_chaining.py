@@ -1,31 +1,3 @@
-def forward_chaining_with_proof(facts, rules, query):
-    # Initialize known facts, negative facts, and proof tree
-    known_facts = set(facts) # Known facts
-
-    proof_tree = {fact: [] for fact in facts} # Proof tree
-    changed = True # Flag to indicate if any new fact is inferred in the current iteration
-
-    # Forward chaining process
-    while changed:
-        changed = False
-        # Iterate over each rule
-        for rule in rules:
-            premises = rule[:-1]# Premises of the rule
-            conclusion = rule[-1]# Conclusion of the rule
-
-            # Check if any premise is a negative fact (i.e., a fact is negated)
-            if conclusion not in known_facts:
-                known_facts.add(conclusion) # Add the conclusion to known facts
-                proof_tree[conclusion] = premises # Add the premises to the proof tree
-                changed = True # Set the flag to True to continue the process
-
-    # After forward chaining, check if the query is a fact or its negation
-    if query in known_facts:
-        proof = build_proof_tree(query, proof_tree)
-        return True, proof
-    else:
-        return False, None
-
 # Build proof for the query
 def build_proof_tree(fact, tree):
     if fact not in tree or not tree[fact]:
@@ -56,6 +28,32 @@ def KBread(file_path):
             facts.add(line)  # Add the positive fact to facts
     return facts, rules
 
+def forward_chaining(facts, rules, query):
+    # Initialize known facts, negative facts, and proof tree
+    known_facts = set(facts) # Known facts
+
+    proof_tree = {fact: [] for fact in facts} # Proof tree
+    new_fact = True # Flag to indicate if any new fact is inferred in the current iteration
+
+    # Forward chaining process
+    while new_fact:
+        new_fact = False
+        # Iterate over each rule
+        for rule in rules:
+            premises, conclusion = rule[:-1], rule[-1]
+
+            # Check if any premise is a negative fact (i.e., a fact is negated)
+            if conclusion not in known_facts:
+                known_facts.add(conclusion) # Add the conclusion to known facts
+                proof_tree[conclusion] = premises # Add the premises to the proof tree
+                new_fact = True # Set the flag to True to continue the process
+
+    # After forward chaining, check if the query is a fact or its negation
+    if query in known_facts:
+        return True, build_proof_tree(query, proof_tree)
+    else:
+        return False, None
+
 def main():
     file_path = input("Enter the path to the input file: ").strip()
 
@@ -65,15 +63,19 @@ def main():
     # User input for the query
     query = input("Enter the query you want to check (e.g., F): ").strip()
 
-    # Test the forward chaining algorithm
-    result, proof = forward_chaining_with_proof(facts, rules, query)
+    while query != "0":
+        # Test the forward chaining algorithm
+        result, proof = forward_chaining(facts, rules, query)
 
-    if result:
-        print(f"\nThe query '{query}' is derivable (True).")
-        print("\nProof tree:")
-        pretty_print_proof(proof)
-    else:
-        print(f"\nThe query '{query}' is not derivable (False).")
+        if result:
+            print(f"\nThe query '{query}' is derivable (True).")
+            print("\nProof tree:")
+            pretty_print_proof(proof)
+        else:
+            print(f"\nThe query '{query}' is not derivable (False).")
+
+        query = input("\nEnter the query you want to check (e.g., F) or enter '0' to exit: ").strip()
+    return
 
 if __name__ == "__main__":
     main()
