@@ -1,3 +1,6 @@
+import os
+import sys
+
 # Build proof for the query
 def build_proof_tree(fact, tree):
     if fact not in tree or not tree[fact]:
@@ -14,19 +17,34 @@ def pretty_print_proof(proof, indent=0):
     else:
         print("  " * indent + f"{proof}")
 
-def KBread(file_path):
-    with open(file_path, "r") as file:
-        lines = file.read().splitlines()
-    rules = []
-    facts = set()
-    for line in lines:
-        line = line.strip()
-        if "->" in line:
-            premises, conclusion = line.split("->")
-            rules.append([premise.strip() for premise in premises.split(",")] + [conclusion.strip()])
-        else:
-            facts.add(line)  # Add the positive fact to facts
-    return facts, rules
+def KBread():
+    try:
+        file_path = input("Enter the path to the input file: ").strip()
+
+        if not os.path.isfile(file_path):
+            raise FileNotFoundError(f"The file at '{file_path}' does not exist.")
+
+        with open(file_path, "r") as file:
+            lines = file.read().splitlines()
+        rules = []
+        facts = set()
+        for line in lines:
+            line = line.strip()
+            if "->" in line:
+                premises, conclusion = line.split("->")
+                rules.append([premise.strip() for premise in premises.split(",")] + [conclusion.strip()])
+            else:
+                facts.add(line)  # Add the positive fact to facts
+        return facts, rules
+    except FileNotFoundError as e:
+        print(f"Error: {e}")
+        sys.exit(1)
+    except PermissionError:
+        print("Error: You do not have permission to access this file.")
+        sys.exit(1)
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
+        sys.exit(1)
 
 def forward_chaining(facts, rules, query):
     # Initialize known facts, negative facts, and proof tree
@@ -55,10 +73,9 @@ def forward_chaining(facts, rules, query):
         return False, None
 
 def main():
-    file_path = input("Enter the path to the input file: ").strip()
 
     # Load the knowledge base
-    facts, rules = KBread(file_path)
+    facts, rules = KBread()
 
     # User input for the query
     query = input("Enter the query you want to check (e.g., F): ").strip()

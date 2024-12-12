@@ -1,4 +1,7 @@
-def KBread(file_path):
+import os
+import sys
+
+def KBread():
     """
     Read and parse predicates from a text file.
 
@@ -8,24 +11,40 @@ def KBread(file_path):
     Returns:
         list: A list of parsed predicates.
     """
-    with open(file_path, 'r') as file:
-        lines = file.readlines()
-    predicates = []
-    for line in lines:
-        line = line.strip()
-        if '->' in line:
-            premise, conclusion = line.split('->')
-            predicates.append({
-                'type': 'rule',
-                'if': parse(premise.strip()),
-                'then': parse(conclusion.strip())
-            })
-        elif line:
-            predicates.append({
-                'type': 'fact',
-                'fact': parse(line)
-            })
-    return predicates
+    try:
+        file_path = input("Enter the path to the input file: ").strip()
+
+        # Check if the file exists
+        if not os.path.isfile(file_path):
+            raise FileNotFoundError(f"The file at '{file_path}' does not exist.")
+
+        with open(file_path, 'r') as file:
+            lines = file.readlines()
+        predicates = []
+        for line in lines:
+            line = line.strip()
+            if '->' in line:
+                premise, conclusion = line.split('->')
+                predicates.append({
+                    'type': 'rule',
+                    'if': parse(premise.strip()),
+                    'then': parse(conclusion.strip())
+                })
+            elif line:
+                predicates.append({
+                    'type': 'fact',
+                    'fact': parse(line)
+                })
+        return predicates
+    except FileNotFoundError as e:
+        print(f"Error: {e}")
+        sys.exit(1)
+    except PermissionError:
+        print("Error: You do not have permission to access this file.")
+        sys.exit(1)
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
+        sys.exit(1)
 
 def parse(predicate):
     """
@@ -136,11 +155,9 @@ def forward_chaining(predicates, query):
     return print(f"\nThe query '{query}' is not derivable (False).")
 
 def main():
-    # Example file path (replace with your actual file path)
-    file_path = input("Enter the path to the input file: ").strip()
 
     # Read predicates from the file
-    predicates = KBread(file_path)
+    predicates = KBread()
 
     query = input("Enter the query predicate: ").strip()
 
