@@ -27,8 +27,7 @@ This project implements a **Forward Chaining Inference System**. It uses a knowl
 1. **Set Up the Knowledge Base**:
    - Open `knowledge_base.txt`.
    - Add facts and rules in the following format:
-     - **Positive facts**: `P`
-     - **Negative facts**: `!D`
+     - **Facts**: `P`
      - **Rules**: `P, Q -> R`
 
 2. **Run the Script**:
