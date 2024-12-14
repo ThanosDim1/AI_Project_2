@@ -2,15 +2,7 @@ import os   # Import the os module to access file operations
 import sys  # Import the sys module to access command-line arguments
 
 def KBread():   # Read and parse predicates from a text file.
-    """
-    Read and parse predicates from a text file.
 
-    Args:
-        file_path (str): Path to the text file.
-
-    Returns:
-        list: A list of parsed predicates.
-    """
     try:
         file_path = input("Enter the path to the input file: ").strip()
 
@@ -47,15 +39,7 @@ def KBread():   # Read and parse predicates from a text file.
         sys.exit(1)           # Exit the program
 
 def parse(predicate):         # Parse a predicate string like Loves(John,Mary) into a dictionary.
-    """
-    Parse a predicate string like Loves(John,Mary) into a dictionary.   
 
-    Args:
-        predicate (str): The predicate string, e.g., "Loves(John,Mary)"
-
-    Returns:
-        dict: Parsed predicate, e.g., {'predicate': 'Loves', 'args': ['John', 'Mary']}
-    """
     name_start = predicate.index('(')   # Find the index of the opening parenthesis
     name_end = predicate.index(')')     # Find the index of the closing parenthesis
     name = predicate[:name_start]       # Extract the predicate name
@@ -63,16 +47,7 @@ def parse(predicate):         # Parse a predicate string like Loves(John,Mary) i
     return {'predicate': name, 'args': [arg.strip() for arg in args]}       # Return the parsed predicate
 
 def unify(predicate, fact):     # Attempt to unify a predicate with a fact.
-    """
-    Attempt to unify a predicate with a fact.
 
-    Args:
-        predicate (dict): The predicate with possible variables.
-        fact (dict): The fact with concrete arguments.
-
-    Returns:
-        dict or None: A mapping of variables to values if unification succeeds, otherwise None.
-    """
     if predicate['predicate'] != fact['predicate']: # Mismatch on the predicate name
         return None
     if len(predicate['args']) != len(fact['args']): # Mismatch on the number of arguments
@@ -91,16 +66,7 @@ def unify(predicate, fact):     # Attempt to unify a predicate with a fact.
 
 
 def apply_substitution(predicate, substitution):    # Apply a substitution to a predicate.
-    """
-    Apply a substitution to a predicate.
 
-    Args:
-        predicate (dict): The predicate to modify.
-        substitution (dict): The variable-to-value mapping.
-
-    Returns:
-        dict: The predicate with variables substituted.
-    """
     return {
         'predicate': predicate['predicate'],        # Keep the predicate name
         'args': [substitution.get(arg, arg) for arg in predicate['args']]       # Substitute variables with values
@@ -108,15 +74,7 @@ def apply_substitution(predicate, substitution):    # Apply a substitution to a 
 
 
 def forward_chaining(predicates, query):        # Perform forward chaining on a set of parsed predicates.
-    """
-    Perform forward chaining on a set of parsed predicates.
 
-    Args:
-        predicates (list): A list of parsed predicates.
-
-    Returns:
-        None: Prints facts and deduced facts.
-    """
     facts = []      # Initialize an empty list to store facts
     rules = []      # Initialize an empty list to store rules
 

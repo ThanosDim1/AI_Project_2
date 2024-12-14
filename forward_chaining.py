@@ -8,7 +8,7 @@ def build_proof_tree(fact, tree):               # Build a proof tree for a given
     return {fact: [build_proof_tree(premise, tree) for premise in tree[fact]]}  # Recursive case: build the proof tree
 
 def print_proof_tree(proof, space=0):        # Recursively print the proof tree in a user-friendly format.
-    """Recursively print the proof tree in a user-friendly format."""
+
     if isinstance(proof, dict):              # If the proof is a dictionary
         for fact, premises in proof.items():    # Iterate over the fact and premises
             print("  " * space + f"{fact} ↓")   # Print the fact

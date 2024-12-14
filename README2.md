@@ -43,3 +43,44 @@ This project implements a **Forward Chaining with propositional predicate logic*
    - The script will indicate if the query is true or false and the facts, rules that were used for the result.
 
 ---
+
+## Example
+
+### Knowledge Base (`knowledge_base_2.txt`):
+```plaintext
+Loves(John, Mary)
+Friend(John, Paul)
+Friend(Mary, Paul)
+Respects(Anna, John)
+Respects(Anna, Paul)
+Loves(Mary, x) -> Loves(John, x)
+Loves(John, x) -> Likes(x, IceCream)
+Loves(Anna, John) -> Loves(Anna, x)
+Likes(x, IceCream) -> Happy(x)
+Respects(x, y) -> Loves(x, y)
+```
+
+### Execution
+```plaintext
+Enter the path to the input file: knowledge_base_2.txt
+Enter the query predicate: Loves(Anna, Paul)
+
+Initial Facts:
+- Loves(John, Mary)
+- Friend(John, Paul)
+- Friend(Mary, Paul)
+- Respects(Anna, John)
+- Respects(Anna, Paul)
+Rule Applied: Loves(John, x) -> Likes(Mary, IceCream)
+Rule Applied: Likes(x, IceCream) -> Happy(Mary)
+Rule Applied: Respects(x, y) -> Loves(Anna, John)
+Rule Applied: Respects(x, y) -> Loves(Anna, Paul)
+
+The query 'Loves(Anna, Paul)' is derivable (True).
+Enter the query predicate or enter '0' to exit: 0
+
+```
+
+## Requirements
+* Python 3.6 or later.
+* No additional libraries required.
