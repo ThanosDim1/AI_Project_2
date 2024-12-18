@@ -7,15 +7,15 @@ def build_proof_tree(fact, tree):               # Build a proof tree for a given
         return fact  # Base case: fact is an initial fact   
     return {fact: [build_proof_tree(premise, tree) for premise in tree[fact]]}  # Recursive case: build the proof tree
 
-def print_proof_tree(proof, space=0):        # Recursively print the proof tree in a user-friendly format.
+def print_proof_tree(proof_tree, space=0):        # Recursively print the proof tree in a user-friendly format.
 
-    if isinstance(proof, dict):              # If the proof is a dictionary
-        for fact, premises in proof.items():    # Iterate over the fact and premises
+    if isinstance(proof_tree, dict):              # If the proof is a dictionary
+        for fact, premises in proof_tree.items():    # Iterate over the fact and premises
             print("  " * space + f"{fact} ↓")   # Print the fact
             for premise in premises:         # Iterate over the premises
-                print_proof_tree(premise, space + 1)    # Recursively print the premises
+                print_proof_tree(premise, space + 1)  # Recursively print the premises
     else:                                   # If the proof is a fact
-        print("  " * space + f"{proof}")    # Print the fact
+        print("  " * space + f"{proof_tree}")    # Print the fact
 
 def KBread():   # Read and parse predicates from a text file.
     try:        # Try block to handle exceptions
@@ -86,7 +86,7 @@ def main():     # Main function to test the forward chaining algorithm.
         if result:
             print(f"\nThe query '{query}' is derivable (True).")    # Print the result
             print("\nProof tree:")                                  # Print the proof tree header
-            print_proof_tree(proof)                                 # Print the proof tree
+            print_proof_tree(proof)  # Print the proof tree
         else:
             print(f"\nThe query '{query}' is not derivable (False).")   # Print the result
 

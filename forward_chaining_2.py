@@ -102,7 +102,6 @@ def forward_chaining(predicates, query):        # Perform forward chaining on a 
                 if substitution:                        # Unification successful
                     new_fact = apply_substitution(conclusion, substitution)     # Apply the substitution to the conclusion
                     if new_fact not in facts:           # Check if the new fact is not already deduced
-                        print(f"Rule Applied: {premise['predicate']}({', '.join(premise['args'])}) -> {new_fact['predicate']}({', '.join(new_fact['args'])})") # Print the rule application
                         facts.append(new_fact)          # Append the new fact to the list
                         newfact = True                  # Set the flag to True to continue the loop 
 
